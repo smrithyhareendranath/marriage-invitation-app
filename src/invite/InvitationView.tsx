@@ -7,7 +7,7 @@ import { Lightbox } from '../components/Lightbox'
 import { Particles } from '../components/Particles'
 import { useReducedMotion } from '../hooks'
 import { luminance, mix, themeVars } from '../lib/color'
-import { formatDate, weekday } from '../lib/util'
+import { formatDate, inviteUrl, weekday } from '../lib/util'
 import { getTheme } from '../data/themes'
 import { SECTION_DEFAULTS } from '../data/demo'
 import { InviteContext } from './context'
@@ -133,7 +133,7 @@ export function InvitationView({ inv, mode, skipCover, onTrack }: Props) {
     }, 1500)
   }
 
-  const shareUrl = `${typeof location !== 'undefined' ? location.origin : ''}/invite/${inv.slug || 'your-names'}`
+  const shareUrl = inviteUrl(inv.slug || "your-names")
 
   const ctx = useMemo(
     () => ({

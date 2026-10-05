@@ -5,7 +5,7 @@ import type { Plan, PricingPlan } from '../../types'
 import { Icon } from '../../components/Icon'
 import { api, planRank } from '../../lib/db'
 import { DEFAULT_PRICING } from '../../data/pricing'
-import { downloadText, slugify } from '../../lib/util'
+import { appPath, downloadText, inviteUrl, slugify } from '../../lib/util'
 import { useAuth, useToast } from '../../context'
 import { Card, ConfirmButton, Field, PageHead, Toggle } from '../ui'
 import { useBuilder } from '../context'
@@ -106,7 +106,7 @@ export function Overview() {
 export function ShareEditor() {
   const { inv, update, setPublished, limits, go } = useBuilder()
   const toast = useToast()
-  const url = `${location.origin}/invite/${inv.slug}`
+  const url = inviteUrl(inv.slug)
   const [qr, setQr] = useState('')
   const [slug, setSlug] = useState(inv.slug)
   const [slugState, setSlugState] = useState<'' | 'ok' | 'taken' | 'invalid'>('')
@@ -138,7 +138,7 @@ export function ShareEditor() {
       <Card title="Publish status" actions={<span className={`pill ${inv.published ? 'yes' : 'maybe'}`}>{inv.published ? 'Live' : 'Draft'}</span>}>
         <p className="hint">{inv.published ? 'Anyone with your link can open your invitation (unless you made it private).' : 'Your invitation is a draft. Publish it so guests can open the link.'}</p>
         <div className="row-end">
-          <a className="btn btn-ghost" href={`/invite/${inv.slug}`} target="_blank" rel="noopener noreferrer"><Icon name="external" size={16} /> Open full page</a>
+          <a className="btn btn-ghost" href={appPath(`/invite/${inv.slug}`)} target="_blank" rel="noopener noreferrer"><Icon name="external" size={16} /> Open full page</a>
           <button className={`btn ${inv.published ? 'btn-ghost' : 'btn-primary'}`} onClick={() => void setPublished(!inv.published)}>{inv.published ? 'Unpublish' : 'Publish invitation'}</button>
         </div>
       </Card>
@@ -150,7 +150,7 @@ export function ShareEditor() {
         </div>
         <Field label="Customise your link" tip="Letters, numbers and dashes only." hint={limits.customSlug ? undefined : 'Custom links are part of Premium.'} error={slugState === 'taken' ? 'That link is already taken.' : slugState === 'invalid' ? 'Use at least 3 letters or numbers.' : undefined}>
           <div className="slug-row">
-            <span>{location.host}/invite/</span>
+            <span>{location.host}{appPath("/invite/")}</span>
             <input value={slug} disabled={!limits.customSlug} onChange={(e) => void checkSlug(e.target.value)} aria-label="Custom link" />
             <button className="btn btn-ghost sm" disabled={!limits.customSlug || slugState !== 'ok'} onClick={() => { update({ slug }); setSlugState(''); toast('Link updated') }}>Save</button>
           </div>
@@ -257,7 +257,7 @@ export function SettingsEditor() {
       <Card title="Danger zone" className="danger-card">
         <div className="danger-row">
           <div><strong>Delete this invitation</strong><p className="hint">Removes the invitation, its photos, RSVPs and messages permanently.</p></div>
-          <ConfirmButton label="Delete invitation" confirmLabel="Yes, delete it" onConfirm={async () => { await api.invitations.remove(inv.id); toast('Invitation deleted'); window.location.assign('/dashboard') }} />
+          <ConfirmButton label="Delete invitation" confirmLabel="Yes, delete it" onConfirm={async () => { await api.invitations.remove(inv.id); toast('Invitation deleted'); window.location.assign(appPath("/dashboard")) }} />
         </div>
         <div className="danger-row">
           <div><strong>Delete my account</strong><p className="hint">Deletes your account and everything in it. This cannot be undone.</p></div>

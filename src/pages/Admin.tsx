@@ -11,7 +11,7 @@ import { mediaStore, formatBytes } from '../lib/media'
 import { countPhotos } from '../dashboard/context'
 import { LineChart, BarList } from '../dashboard/charts'
 import { Card, ConfirmButton, EmptyState, Field, PageHead } from '../dashboard/ui'
-import { timeAgo } from '../lib/util'
+import { appPath, timeAgo } from '../lib/util'
 import { useTitle } from '../hooks'
 
 type Tab = 'overview' | 'users' | 'invitations' | 'themes' | 'pricing' | 'reports' | 'subscriptions' | 'storage'
@@ -211,7 +211,7 @@ function Invitations({ d, reload, ownerName }: { d: Data; reload(): void; ownerN
                   <td data-label="Status"><span className={`pill ${i.published ? 'yes' : 'maybe'}`}>{i.published ? 'Published' : 'Draft'}</span></td>
                   <td data-label="Featured"><input type="checkbox" checked={!!i.featured} onChange={(e) => void patch(i, { featured: e.target.checked })} aria-label={`Feature ${i.slug}`} /></td>
                   <td className="row-actions">
-                    <a className="btn btn-ghost sm" href={`/invite/${i.slug}`} target="_blank" rel="noopener noreferrer">View</a>
+                    <a className="btn btn-ghost sm" href={appPath(`/invite/${i.slug}`)} target="_blank" rel="noopener noreferrer">View</a>
                     {i.published && <button className="btn btn-ghost sm" onClick={() => void patch(i, { published: false })}>Unpublish</button>}
                     <ConfirmButton label="" confirmLabel="Delete?" onConfirm={async () => { await api.invitations.remove(i.id); toast('Invitation deleted'); reload() }} />
                   </td>

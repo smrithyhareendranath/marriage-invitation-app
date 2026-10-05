@@ -177,3 +177,11 @@ export function timeAgo(iso: string): string {
   if (s < 86400) return `${Math.floor(s / 3600)}h ago`
   return `${Math.floor(s / 86400)}d ago`
 }
+
+/** Path prefix the app is served under (e.g. "/repo-name" on GitHub Pages, "" at a domain root). */
+export const BASE = import.meta.env.BASE_URL.replace(/\/$/, '')
+
+export const appPath = (p: string) => `${BASE}${p}`
+
+export const inviteUrl = (slug: string) =>
+  `${typeof location !== 'undefined' ? location.origin : ''}${appPath(`/invite/${slug}`)}`

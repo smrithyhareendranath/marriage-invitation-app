@@ -9,7 +9,7 @@ import { api } from '../lib/db'
 import { PLAN_LIMITS } from '../data/pricing'
 import { blankInvitation, demoInvitation } from '../data/demo'
 import { THEMES } from '../data/themes'
-import { slugify } from '../lib/util'
+import { appPath, slugify } from '../lib/util'
 import { BuilderContext, countPhotos } from './context'
 import type { SaveState } from './context'
 import { computeProgress, computeTasks } from './progress'
@@ -382,7 +382,7 @@ export function Dashboard() {
             </div>
             <div className="dash-actions">
               {viewPreview && <button className="btn btn-ghost sm only-narrow" onClick={() => setPreviewOpen(true)}><Icon name="eye" size={16} /> Preview</button>}
-              <a className="btn btn-ghost sm hide-narrow" href={`/invite/${inv.slug}`} target="_blank" rel="noopener noreferrer"><Icon name="external" size={15} /> Open</a>
+              <a className="btn btn-ghost sm hide-narrow" href={appPath(`/invite/${inv.slug}`)} target="_blank" rel="noopener noreferrer"><Icon name="external" size={15} /> Open</a>
               <button className={`btn sm ${inv.published ? 'btn-ghost' : 'btn-primary'}`} onClick={() => void setPublished(!inv.published)}>
                 <Icon name={inv.published ? 'eyeoff' : 'rocket'} size={15} /> {inv.published ? 'Unpublish' : 'Publish'}
               </button>
